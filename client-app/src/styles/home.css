@@ -1,0 +1,78 @@
+.home {
+    height: 100vh; /* Equivalent to h-screen */
+    width: 100vw;  /* Equivalent to w-screen */
+    background-color: #f7fafc; /* Equivalent to bg-gray-100 */
+    display: grid; /* Equivalent to grid */
+    grid-template-columns: repeat(6, 1fr); /* Equivalent to grid-cols-6 */
+}
+
+
+/* Leftbar style */
+
+.leftbar {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px 20px;
+    background-color: #f9f9f9;
+    border-right: 1px solid #ddd;
+    height: 100vh;
+}
+
+.leftbar-item {
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    padding: 10px;
+    width: 100%;
+}
+
+.leftbar-item:hover {
+    transform: scale(1.05);
+    background-color: #f0f0f0;
+}
+
+.leftbar-item img {
+    width: 20px;
+    height: 18px;
+    margin-right: 10px;
+    border-radius:3px;
+}
+
+.leftbar-item span {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+}
+
+.leftbar-footer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+    width: 100%;
+}
+
+.leftbar-footer a {
+    font-size: 14px;
+    color: #555;
+    text-decoration: none;
+    margin-bottom: 10px;
+    position: relative;
+    padding-left: 10px;
+}
+
+.leftbar-footer a::after {
+    content: "•";
+    position: absolute;
+    right:1;
+    color: #555;
+}
+
+.leftbar-footer a:hover {
+    color: #000;
+}
+
+
+

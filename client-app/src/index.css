@@ -1,0 +1,150 @@
+/* Import Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.landing {
+  @apply flex items-center justify-center min-h-screen bg-cover bg-center;
+  background-image: url('./assets/bg.png');
+}
+
+.container {
+  @apply bg-white p-8 shadow-lg max-w-3xl w-full flex flex-col;
+}
+
+.header {
+  @apply text-center mb-8;
+}
+
+.title {
+  @apply text-3xl font-bold mb-2 text-red-600;
+}
+
+.description {
+  @apply text-center mb-2;
+}
+
+.content {
+  @apply flex w-full;
+}
+
+.signup-container, .login-container {
+  @apply w-1/2 p-4;
+}
+
+.signup-container {
+  @apply border-r border-gray-300;
+}
+
+.form {
+  @apply space-y-4;
+}
+
+.social-button {
+  @apply w-full py-2 px-4 flex items-center justify-start mb-2 border border-gray-300;
+}
+
+.google-button {
+  @apply bg-white text-black hover:bg-gray-200;
+}
+.igoogle {
+  @apply w-16 h-16;
+  background-image: url('./components/google.png');
+}
+
+.facebook-button {
+  @apply bg-white text-black hover:bg-gray-200;
+}
+
+.icon {
+  @apply w-5 h-5 mr-2;
+}
+
+.email-signup {
+  @apply w-[300px]  flex items-center justify-center rounded-lg;
+  @apply bg-white text-gray-700 hover:bg-gray-200;
+}
+
+.input-group {
+  @apply mb-4;
+}
+
+.label {
+  @apply block text-gray-700;
+}
+
+.input {
+  @apply w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600;
+}
+
+.login-actions {
+  @apply flex items-center justify-between;
+}
+
+.forgot-password {
+  @apply text-blue-600 hover:underline;
+}
+
+.login-button {
+  @apply py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-700;
+}
+
+.footer {
+  @apply text-center mt-4;
+}
+
+.footer-content {
+  @apply flex flex-wrap justify-center space-x-4 text-sm;
+}
+
+.link {
+  @apply text-blue-600;
+}
+
+
+/* Tailwind CSS styles for Emailsignin.tsx */
+
+/* Modal Background */
+.modal-overlay {
+  @apply fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50;
+}
+
+/* Modal Container */
+.modal-container {
+  @apply bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative;
+}
+
+/* Close Button */
+.close-button {
+  @apply absolute top-2 right-2 text-gray-700;
+}
+
+/* Form Heading */
+.form-heading {
+  @apply text-2xl font-bold mb-4;
+}
+
+/* Form Group */
+.form-group {
+  @apply mb-4;
+}
+
+/* Form Label */
+.form-label {
+  @apply block text-gray-700;
+}
+
+/* Form Input */
+.form-input {
+  @apply w-full p-2 border border-gray-300 rounded mt-1;
+}
+
+/* Submit Button */
+.submit-button {
+  @apply w-full bg-blue-500 text-white py-2 rounded;
+}
+
+/* Message */
+.message {
+  @apply mt-4 text-center text-green-500;
+}
