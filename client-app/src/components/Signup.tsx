@@ -1,18 +1,33 @@
-import { signInWithPopup } from "@firebase/auth";
+import { useEffect, useState } from "react";
+import { signInWithPopup, onAuthStateChanged } from "firebase/auth";
 import { auth, facebookProvider, googleProvider } from "../firebase/setup";
-import { useState } from "react";
 import Emailsignin from "./Emailsignin";
-import google from "../assets/google.png"
-import facebook from "../assets/facebook.png"
-
+import google from "../assets/google.png";
+import facebook from "../assets/facebook.png";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Signup = () => {
   const [emailSignin, setEmailSignin] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        toast.success("Login successful!");
+        navigate("/mainpage");
+      }
+    });
+    return () => unsubscribe();
+  }, [navigate]);
 
   const googleSignup = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
+      toast.success("Login successful!");
     } catch (error) {
+      toast.error("Login failed. Please try again.");
       console.error(error);
     }
   };
@@ -20,22 +35,23 @@ const Signup = () => {
   const facebookSignup = async () => {
     try {
       await signInWithPopup(auth, facebookProvider);
+      toast.success("Login successful!");
     } catch (error) {
+      toast.error("Login failed. Please try again.");
       console.error(error);
     }
   };
 
   return (
-
-    
     <div className="landing">
+      <ToastContainer />
       <div className="container">
         <div className="header">
-        <div className="text-center text-2xl text-blue-500">
-      Hello, Vite + React + TailwindCSS!
-    </div>
+          <div className="text-center text-2xl text-blue-500"></div>
           <h1 className="title">Quora</h1>
-          <p className="description">A place to share knowledge and better understand the world</p>
+          <p className="description">
+            A place to share knowledge and better understand the world
+          </p>
         </div>
         <div className="content">
           <div className="signup-container">
@@ -45,13 +61,27 @@ const Signup = () => {
                 <a href="#" className="link"> Terms of Service</a> and
                 <a href="#" className="link"> Privacy Policy</a>.
               </p>
-              <button type="button" onClick={googleSignup} className="social-button google-button">
+              <button
+                type="button"
+                onClick={googleSignup}
+                className="social-button google-button"
+              >
                 <img src={google} alt="Google" className="icon" /> Continue with Google
               </button>
-              <button type="button" onClick={facebookSignup} className="social-button facebook-button">
+              <button
+                type="button"
+                onClick={facebookSignup}
+                className="social-button facebook-button"
+              >
                 <img src={facebook} alt="Facebook" className="icon" /> Continue with Facebook
               </button>
-              <button type="button" onClick={() => setEmailSignin(true)} className="email-signup">Sign up with email</button>
+              <button
+                type="button"
+                onClick={() => setEmailSignin(true)}
+                className="email-signup"
+              >
+                Sign up with email
+              </button>
             </form>
           </div>
           <div className="login-container">
@@ -60,11 +90,21 @@ const Signup = () => {
               <hr />
               <div className="input-group">
                 <label htmlFor="login-email" className="label">Email</label>
-                <input type="email" id="login-email" className="input" placeholder="Your Email" />
+                <input
+                  type="email"
+                  id="login-email"
+                  className="input"
+                  placeholder="Your Email"
+                />
               </div>
               <div className="input-group">
                 <label htmlFor="login-password" className="label">Password</label>
-                <input type="password" id="login-password" className="input" placeholder="Your Password" />
+                <input
+                  type="password"
+                  id="login-password"
+                  className="input"
+                  placeholder="Your Password"
+                />
               </div>
               <div className="login-actions">
                 <a href="#" className="forgot-password">Forgot Password?</a>

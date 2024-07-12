@@ -1,5 +1,5 @@
 import Leftbar from "./Leftbar"
-import Rightbar from "./Rightbar"
+import Midbar from "./Midbar"
 
 
 const Home = () => {
@@ -10,7 +10,7 @@ const Home = () => {
       </div>
 
       <div>
-    <Rightbar/>
+    <Midbar/>
       </div>
     </div>
   )

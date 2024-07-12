@@ -3,6 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 .landing {
   @apply flex items-center justify-center min-h-screen bg-cover bg-center;
   background-image: url('./assets/bg.png');

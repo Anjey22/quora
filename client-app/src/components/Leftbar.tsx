@@ -29,7 +29,7 @@ const Leftbar = () => {
             <span>Technology</span>
         </div>
         <div className="leftbar-footer">
-            <a href="#">About</a>
+            <a href="#">About </a>
             <a href="#">Careers</a>
             <a href="#">Terms</a>
             <a href="#">Privacy</a>

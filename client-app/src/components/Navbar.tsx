@@ -1,5 +1,6 @@
 
 import '../assets/NavBar.css';
+import { auth } from "../firebase/setup";
 import quora from "../assets/quora.png";
 import home from "../assets/home.png";
 import clipboard from "../assets/clipboard.png";
@@ -15,11 +16,11 @@ const Navbar: React.FC = () => {
     <div className="navbar">
       <div className="navbar-left">
         <img src={quora} alt="Quora"/>
-        <img src={home} alt="Home" className='image' />
-        <img src={clipboard} alt="Clipboard" className='image' />
-        <img src={edit} alt="Edit" className='image'/>
-        <img src={group} alt="Group" className='image'/>
-        <img src={bell} alt="Bell" className='image'/>
+        <img src={home} alt="Home" className='images' />
+        <img src={clipboard} alt="Clipboard" className='images' />
+        <img src={edit} alt="Edit" className='images'/>
+        <img src={group} alt="Group" className='images'/>
+        <img src={bell} alt="Bell" className='images'/>
       </div>
 
       <div className="navbar-center">
@@ -28,9 +29,13 @@ const Navbar: React.FC = () => {
       </div>
 
       <div className="navbar-right">
-        <button className="try-quora-plus image">Try Quora+</button>
-        <Avatar round size='35' name='A'/>
-        <img src={globe} alt="globe" className='globe image'/>
+        <button className="try-quora-plus">Try Quora+</button>
+        <Avatar
+          round
+          size="35"
+          name={auth?.currentUser?.emailVerified ? (auth.currentUser.displayName || 'A') : 'A'}
+        />
+        <img src={globe} alt="globe" className='globe images'/>
 
         <button className="add-question">Add question</button>
         <button className="menu-button">=</button>

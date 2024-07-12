@@ -4,8 +4,10 @@
     justify-content: center;
     padding: 1rem;
     background-color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
+    border-bottom: 1px solid lightgray;
+    box-shadow:  3px 4px 6px rgba(0, 0, 0, 1); /* Adjusted for a subtle bottom shadow */
+}
+
   
   .navbar-left,
   .navbar-center,
@@ -22,15 +24,14 @@
     background-color:white;
 
   }
-  .image{
+  .images{
     padding:4px;
-    border: 1px solid red;
   }
-  .image:hover{
-    background-color:lightgray;
+  .images:hover{
+    background-color:#eeeeee;
     color:black;
     padding:4px;
-    border: 1px solid red;
+    border: 3px solid ##eaeaea;
   }
   .navbar-center {
     border: 1px solid #d1d5db;
@@ -69,7 +70,8 @@
   }
   
   .navbar-right .try-quora-plus:hover {
-    background-color: lightgray;
+    background-color:  #f9f9f9;
+    
   }
   
   .navbar-right .globe {
@@ -78,11 +80,11 @@
   }
   
   .navbar-right .add-question {
-    background-color:red;
+    background-color: red;
   }
   
   .navbar-right .add-question:hover {
-    background-color: #3182ce;
+    background-color: lightred;
   }
   
   .navbar-right .menu-button {
