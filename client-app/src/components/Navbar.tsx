@@ -1,4 +1,4 @@
-
+import React, { useState } from 'react';
 import '../assets/NavBar.css';
 import { auth } from "../firebase/setup";
 import quora from "../assets/quora.png";
@@ -10,8 +10,13 @@ import bell from "../assets/bell.png";
 import search from "../assets/search.png";
 import globe from "../assets/globe.png";
 import Avatar from 'react-avatar';
+import PostpopUp from'./PostpopUp'
 
 const Navbar: React.FC = () => {
+  const [post, setPost] = useState(false);
+
+  const handleClose = () => setPost(false);
+
   return (
     <div className="navbar">
       <div className="navbar-left">
@@ -36,10 +41,10 @@ const Navbar: React.FC = () => {
           name={auth?.currentUser?.emailVerified ? (auth.currentUser.displayName || 'A') : 'A'}
         />
         <img src={globe} alt="globe" className='globe images'/>
-
-        <button className="add-question">Add question</button>
+        <button onClick={() => setPost(true)} className="add-question">Add question</button>
         <button className="menu-button">=</button>
       </div>
+      <PostpopUp show={post} onClose={handleClose} />
     </div>
   );
 };

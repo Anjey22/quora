@@ -1,13 +1,11 @@
-.navbar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-    background-color: white;
-    border-bottom: 1px solid lightgray;
-    box-shadow:  3px 4px 6px rgba(0, 0, 0, 1); /* Adjusted for a subtle bottom shadow */
-}
 
+.navbar {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
   
   .navbar-left,
   .navbar-center,
@@ -19,7 +17,7 @@
   .navbar-left img,
   .navbar-right img,
   .navbar-center img {
-    height: 2.5rem;
+    height: 2.3rem;
     margin-right: 2rem;
     background-color:white;
 
