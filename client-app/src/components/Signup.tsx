@@ -26,6 +26,7 @@ const Signup = () => {
     try {
       await signInWithPopup(auth, googleProvider);
       toast.success("Login successful!");
+      navigate("/mainpage");
     } catch (error) {
       toast.error("Login failed. Please try again.");
       console.error(error);
@@ -34,8 +35,11 @@ const Signup = () => {
 
   const facebookSignup = async () => {
     try {
-      await signInWithPopup(auth, facebookProvider);
-      toast.success("Login successful!");
+      const result = await signInWithPopup(auth, facebookProvider);
+      if (result.user) {
+        toast.success("Login successful!");
+        navigate("/mainpage");
+      }
     } catch (error) {
       toast.error("Login failed. Please try again.");
       console.error(error);
@@ -47,7 +51,6 @@ const Signup = () => {
       <ToastContainer />
       <div className="container">
         <div className="header">
-          <div className="text-center text-2xl text-blue-500"></div>
           <h1 className="title">Quora</h1>
           <p className="description">
             A place to share knowledge and better understand the world

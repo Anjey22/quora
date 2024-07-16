@@ -1,7 +1,7 @@
 import { addDoc, collection } from 'firebase/firestore';
 import React, { useState } from 'react';
 import { Modal, Button, Nav, Tab, Form } from 'react-bootstrap';
-import { DataStorage } from '../firebase/setup';
+import { DataStorage, auth } from '../firebase/setup'; // Assuming `auth` is imported from your setup file
 
 interface PostpopUpModalProps {
   show: boolean;
@@ -18,7 +18,8 @@ const PostpopUp: React.FC<PostpopUpModalProps> = ({ show, onClose }) => {
 
   const addQuestion = async () => {
     await addDoc(questionsRef, {
-      question: quest
+      question: quest,
+      email: auth.currentUser?.email // Accessing current user's email
     });
     onClose(); // Close the modal after adding a question
   };

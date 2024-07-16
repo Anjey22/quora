@@ -4,7 +4,7 @@ import Navbar from "./Navbar"
 
 const Mainpage = () => {
   return (
-    <div>
+    <div className="h-screen w-screen">
       <Navbar/>
       <Home/>
     </div>
