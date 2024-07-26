@@ -1,4 +1,4 @@
-/*midbar style */
+/*midbar style 
 .midbar {
     padding: 15px 20px;
     width: 650px;
@@ -68,28 +68,24 @@
     font-size: 16px;
   }
   
-  .content {
+ 
+.content {
     display: flex;
     align-items: center;
   }
   
   .userName {
-    margin-left: 8px;
+    margin-left: 10px;
     font-weight: bold;
   }
   
   .captions {
-    margin-top: 8px;
-    font-size: 18px;
+    margin-top: 10px;
   }
   
   .toggle-caption {
-    color: #0073b1;
+    color: blue;
     cursor: pointer;
-  }
-  
-  .file-content {
-    margin-top: 8px;
   }
   
   .post-actions {
@@ -104,64 +100,184 @@
     cursor: pointer;
   }
  
+..comment-section {
+  margin-top: 8px;
+}
+
+.comment {
+  margin-top: 4px;
+}
+
+.comment-user {
+  font-weight: bold;
+}
+
+.comment-input {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.comment-input input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 8px;
+}
+
+.comment-input button {
+  padding: 8px 12px;
+  background-color: #0073b1;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.file-content img, .file-content video {
+  max-width: 100%;
+  border-radius: 5px;
+}*/
+
+/* Midbar Style */
+.midbar {
+  padding: 15px 20px;
+  width: 650px;
+  background-color: white;
+  border-radius: 3px;
+  border: 1px solid lightgray;
+  margin: 20px auto; 
+}
+
+.midbar-top {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.midbar-avatar-input {
+  display: flex;
+  align-items: center;
+}
+
+.midbar-avatar-input input {
+  margin-left: 10px;
+  padding: 10px 15px; /* Adjusted padding for better alignment */
+  border: 1px solid #ccc;
+  border-radius: 25px; /* Rounded corners */
+  background-color: #f9f9f9;
+  width: 550px;
+  font-size: 14px; /* Adjusted font size for readability */
+}
+
+.midbar-actions {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px; /* Added margin for spacing */
+}
+
+.midbar-actions h1 {
+  font-size: 16px;
+  font-weight: normal;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin: 0; /* Removed default margin */
+}
+
+.midbar-actions h1 i {
+  margin-right: 5px;
+  font-size: 20px; /* Consistent font size for icons */
+}
+
+.toggle-caption {
+  color: blue;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+}
+
+.userName {
+  margin-left: 10px;
+  font-weight: bold;
+}
 
 .captions {
-    margin-top: 8px;
-    font-size: 18px;
+  margin-top: 10px;
+}
+
+.post-actions {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 8px;
+}
+
+.post-action-icon {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.comment-section {
+  margin-top: 8px;
+}
+
+.comment {
+  margin-top: 4px;
+}
+
+.comment-user {
+  font-weight: bold;
+}
+
+.comment-input {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.comment-input input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 8px;
+  font-size: 14px; /* Adjusted font size for consistency */
+}
+
+.comment-input button {
+  padding: 8px 12px;
+  background-color: #0073b1;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px; /* Consistent font size */
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+  .midbar {
+      width: 100%; /* Full width on smaller screens */
+      padding: 10px; /* Adjust padding */
   }
-  
-  .toggle-caption {
-    color: #0073b1;
-    cursor: pointer;
+
+  .midbar-avatar-input input {
+      width: 100%; /* Full width on smaller screens */
   }
-  
-  .file-content {
-    margin-top: 8px;
+
+  .midbar-actions {
+      flex-direction: column;
+      align-items: center;
   }
-  
-  .post-actions {
-    display: flex;
-    align-items: center;
-    margin-top: 8px;
+
+  .midbar-actions h1 {
+      font-size: 14px; /* Adjusted font size for smaller screens */
+      margin-bottom: 5px;
   }
-  
-  .post-action-icon {
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-  }
-  
-  .comment-section {
-    margin-top: 8px;
-  }
-  
-  .comment {
-    margin-top: 4px;
-  }
-  
-  .comment-user {
-    font-weight: bold;
-  }
-  
-  .comment-input {
-    display: flex;
-    align-items: center;
-    margin-top: 8px;
-  }
-  
-  .comment-input input {
-    flex: 1;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-right: 8px;
-  }
-  
-  .comment-input button {
-    padding: 8px 12px;
-    background-color: #0073b1;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
+}

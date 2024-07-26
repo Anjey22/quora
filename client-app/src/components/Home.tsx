@@ -1,19 +1,24 @@
-import Leftbar from "./Leftbar"
-import Midbar from "./Midbar"
+import { useState } from "react";
+import Leftbar from "./Leftbar";
+import Mid from "./Mid";
 
+type SearchProp = {
+  search: string;
+};
 
-const Home = () => {
+const Home = ({ search }: SearchProp) => {
+  const [menu, setMenu] = useState("");
+
   return (
     <div className="home">
       <div>
-    <Leftbar/>
+        <Leftbar setMenu={setMenu} />
       </div>
-
       <div>
-    <Midbar/>
+        <Mid search={search} />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

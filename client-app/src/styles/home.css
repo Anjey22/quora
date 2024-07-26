@@ -31,7 +31,6 @@
 }
 
 .leftbar-item:hover {
-    transform: scale(1.05);
     background-color: #f0f0f0;
 }
 
@@ -79,7 +78,7 @@
 
 
 
-/*midbar style */
+/*midbar style 
 .midbar {
     padding: 15px 20px;
     width: 650px;
@@ -183,7 +182,7 @@
     width: 24px;
     height: 24px;
     cursor: pointer;
-  }
+  } */
   
 
 
