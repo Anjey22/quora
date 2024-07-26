@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { auth, DataStorage } from "../firebase/setup";
 import Avatar from "react-avatar";
 import { collection, addDoc, serverTimestamp, updateDoc, doc, onSnapshot, getDocs } from 'firebase/firestore';
@@ -21,6 +22,10 @@ const Midbar = (props: searchProp) => {
   const [userDisplayName, setUserDisplayName] = useState<string>('');
   const [commentInputs, setCommentInputs] = useState<{ [key: string]: string }>({});
   const [visibleComments, setVisibleComments] = useState<{ [key: string]: boolean }>({});
+  const [answerInputVisible, setAnswerInputVisible] = useState<{ [key: string]: boolean }>({});
+  const [currentQuestionId, setCurrentQuestionId] = useState<string | null>(null);
+
+  const navigate = useNavigate();
 
   const questionsRef = collection(DataStorage, "questions");
   const postsRef = collection(DataStorage, "posts");
@@ -103,6 +108,37 @@ const Midbar = (props: searchProp) => {
     }
   };
 
+  const handleComment = async (id: string, collection: 'questions' | 'posts') => {
+    if (commentInputs[id]?.trim()) {
+      const postRef = doc(DataStorage, collection, id);
+      const data = collection === 'questions' ? questionData.find(q => q.id === id) : postData.find(p => p.id === id);
+
+      if (data) {
+        const updatedData = { ...data };
+        updatedData.comments = [...(updatedData.comments || []), { user: userDisplayName, text: commentInputs[id], timestamp: new Date() }];
+        await updateDoc(postRef, { comments: updatedData.comments });
+        setCommentInputs(prev => ({ ...prev, [id]: '' }));
+      }
+    }
+  };
+
+  const handleAnswer = async (id: string) => {
+    if (commentInputs[id]?.trim()) {
+      const postRef = doc(DataStorage, "questions", id);
+      const data = questionData.find(q => q.id === id);
+
+      if (data) {
+        const updatedData = { ...data };
+        updatedData.comments = [...(updatedData.comments || []), { user: userDisplayName, text: commentInputs[id], timestamp: new Date() }];
+        await updateDoc(postRef, { comments: updatedData.comments });
+        setCommentInputs(prev => ({ ...prev, [id]: '' }));
+        setAnswerInputVisible(prev => ({ ...prev, [id]: false }));
+        navigate(`/answers/${id}`); // Navigate to the answers section
+      }
+    }
+  };
+
+
   const handleVote = async (id: string, type: 'upvote' | 'downvote', collection: 'questions' | 'posts') => {
     try {
       const postRef = doc(DataStorage, collection, id);
@@ -131,18 +167,12 @@ const Midbar = (props: searchProp) => {
     }
   };
 
-  const handleComment = async (id: string, collection: 'questions' | 'posts') => {
-    if (commentInputs[id]?.trim()) {
-      const postRef = doc(DataStorage, collection, id);
-      const data = collection === 'questions' ? questionData.find(q => q.id === id) : postData.find(p => p.id === id);
-
-      if (data) {
-        const updatedData = { ...data };
-        updatedData.comments = [...(updatedData.comments || []), { user: userDisplayName, text: commentInputs[id], timestamp: new Date() }];
-        await updateDoc(postRef, { comments: updatedData.comments });
-        setCommentInputs(prev => ({ ...prev, [id]: '' }));
-      }
-    }
+  const toggleAnswerInput = (id: string) => {
+    setAnswerInputVisible(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+    setCurrentQuestionId(id); // Set the current question ID for redirection
   };
 
   const toggleExpandQuestion = (id: string) => {
@@ -216,7 +246,8 @@ const Midbar = (props: searchProp) => {
         <div className="midbar-actions">
           <h1><i className="fas fa-question-circle" onClick={handleQuestionClick}></i> Ask</h1>
           <h1><i className="fas fa-pen-square"></i> Answer</h1>
-          <h1 onClick={handlePostClick}><i className="fas fa-pen"></i> Post</h1>
+          <h1><i className="fas fa-pen"  onClick={handleQuestionClick}></i> Post</h1>
+
         </div>
       </div>
 
@@ -239,34 +270,23 @@ const Midbar = (props: searchProp) => {
             <hr />
             <div className="post-actions">
               <div>
-                <h1><i className="fas fa-pen-square post-action-icon" onClick={() => toggleCommentVisibility(data.id)}></i> Answer</h1>
+                <h1><i className="fas fa-pen-square post-action-icon" onClick={() => toggleAnswerInput(data.id)}></i> Answer</h1>
                 <span>{data.comments?.length || 0}</span>
               </div>
             </div>
-            {visibleComments[data.id] && (
-              <>
-                <div className="comment-input">
-                  <input
-                    type="text"
-                    value={commentInputs[data.id] || ''}
-                    onChange={(e) => setCommentInputs({ ...commentInputs, [data.id]: e.target.value })}
-                    placeholder="Write your Answer..."
-                  />
-                  <button onClick={() => handleComment(data.id, 'questions')}>Add Answer</button>
-                </div>
-                <div className="comment-section">
-                  {data.comments?.map((comment: any, index: number) => (
-                    <div key={index} className="comment">
-                      <Avatar round size="35" name={userDisplayName || 'A'} />
-                      <span className="comment-user">{comment.user}</span>: {comment.text}
-                    </div>
-                  ))}
-                </div>
-              </>
+            {answerInputVisible[data.id] && (
+              <div className="comment-input">
+                <input
+                  type="text"
+                  value={commentInputs[data.id] || ''}
+                  onChange={(e) => setCommentInputs({ ...commentInputs, [data.id]: e.target.value })}
+                  placeholder="Write your Answer..."
+                />
+                <button onClick={() => handleAnswer(data.id)}>Add Answer</button>
+              </div>
             )}
           </div>
         ))}
-
       {postData
         .filter((data) => data?.content.toLowerCase().includes(props?.search.toLowerCase()))
         .map((data: any) => (
@@ -324,8 +344,11 @@ const Midbar = (props: searchProp) => {
                 <div className="comment-section">
                   {data.comments?.map((comment: any, index: number) => (
                     <div key={index} className="comment">
-                      <Avatar round size="35" name={userDisplayName || 'A'} />
-                      <span className="comment-user">{comment.user}</span>: {comment.text}
+                      <Avatar round size="35" name={comment.user || 'A'} />
+                      <div className="comment-content">
+                        <span className="comment-user">{comment.user}</span>
+                        <p>{comment.text}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
