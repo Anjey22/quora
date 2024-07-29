@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
 import '../assets/NavBar.css';
 import { auth } from "../firebase/setup";
 import quora from "../assets/quora.png";
@@ -11,6 +12,7 @@ import search from "../assets/search.png";
 import globe from "../assets/globe.png";
 import Avatar from 'react-avatar';
 import PostpopUp from './PostpopUp';
+import DropdownProfile from './DropdownProfile'; // Import the DropdownProfile component
 
 type NavbarProps = {
   setSearch: (value: string) => void
@@ -19,7 +21,9 @@ type NavbarProps = {
 const Navbar: React.FC<NavbarProps> = ({ setSearch }) => {
   const [post, setPost] = useState(false);
   const [userDisplayName, setUserDisplayName] = useState<string>('A');
-  
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+
+  const navigate = useNavigate(); // Initialize useNavigate hook
 
   const handleClose = () => setPost(false);
 
@@ -34,6 +38,19 @@ const Navbar: React.FC<NavbarProps> = ({ setSearch }) => {
 
     return () => unsubscribe();
   }, []);
+
+  const toggleDropdown = () => {
+    setDropdownVisible(!dropdownVisible);
+  };
+
+  const handleLogout = () => {
+    auth.signOut().then(() => {
+      setDropdownVisible(false);
+      navigate('/'); // Redirect to sign-in page after logout
+    }).catch(error => {
+      console.error("Logout error:", error);
+    });
+  };
 
   return (
     <div className="navbar">
@@ -53,11 +70,16 @@ const Navbar: React.FC<NavbarProps> = ({ setSearch }) => {
 
       <div className="navbar-right">
         <button className="try-quora-plus">Try Quora+</button>
-        <Avatar
-          round
-          size="35"
-          name={userDisplayName}
-        />
+        <div className="avatar-container Profile" onClick={toggleDropdown}>
+          <Avatar
+            round
+            size="35"
+            name={userDisplayName}
+          />
+          {dropdownVisible && (
+            <DropdownProfile handleLogout={handleLogout} />
+          )}
+        </div>
         <img src={globe} alt="globe" className='globe images' />
         <button onClick={() => setPost(true)} className="add-question">Add question</button>
         <button className="menu-button">=</button>

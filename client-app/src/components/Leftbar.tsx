@@ -37,8 +37,8 @@ const Leftbar = (props:MenuProp) => {
             <a href="#">Careers</a>
             <a href="#">Terms</a>
             <a href="#">Privacy</a>
-            <a href="#">Acceptable Use</a>
             <a href="#">Advertise</a>
+            <a href="#">Acceptable Use</a>
             <a href="#">Press</a>
             <a href="#">Your Ad Choices</a>
             <a href="#">Grievance Officer</a>

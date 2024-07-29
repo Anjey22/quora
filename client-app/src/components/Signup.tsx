@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { signInWithPopup, onAuthStateChanged } from "firebase/auth";
+import { useEffect, useState, FormEvent } from "react";
+import { signInWithPopup, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import { auth, facebookProvider, googleProvider } from "../firebase/setup";
 import Emailsignin from "./Emailsignin";
 import google from "../assets/google.png";
@@ -10,6 +10,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const Signup = () => {
   const [emailSignin, setEmailSignin] = useState(false);
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,6 +44,23 @@ const Signup = () => {
       }
     } catch (error) {
       toast.error("Login failed. Please try again.");
+      console.error(error);
+    }
+  };
+
+  const handleLogin = async (e: FormEvent) => {
+    e.preventDefault();
+    try {
+      await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
+      toast.success("Login successful!");
+      navigate("/mainpage");
+    } catch (error: any) {
+      const errorCode = error.code;
+      if (errorCode === 'auth/user-not-found') {
+        toast.error("No account found with this email. Please sign up first.");
+      } else if (errorCode === 'auth/wrong-password') {
+        toast.error("Invalid credentials. Please try again.");
+      }
       console.error(error);
     }
   };
@@ -88,7 +107,7 @@ const Signup = () => {
             </form>
           </div>
           <div className="login-container">
-            <form className="form">
+            <form className="form" onSubmit={handleLogin}>
               <h1>Login</h1>
               <hr />
               <div className="input-group">
@@ -98,6 +117,9 @@ const Signup = () => {
                   id="login-email"
                   className="input"
                   placeholder="Your Email"
+                  value={loginEmail}
+                  onChange={(e) => setLoginEmail(e.target.value)}
+                  required
                 />
               </div>
               <div className="input-group">
@@ -107,11 +129,14 @@ const Signup = () => {
                   id="login-password"
                   className="input"
                   placeholder="Your Password"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  required
                 />
               </div>
               <div className="login-actions">
                 <a href="#" className="forgot-password">Forgot Password?</a>
-                <button className="login-button">Login</button>
+                <button className="login-button" type="submit">Login</button>
               </div>
             </form>
           </div>

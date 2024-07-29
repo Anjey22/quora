@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { auth, DataStorage } from "../firebase/setup";
 import Avatar from "react-avatar";
 import { collection, addDoc, serverTimestamp, updateDoc, doc, onSnapshot, getDocs } from 'firebase/firestore';
@@ -7,7 +8,11 @@ import arrowUp from "../assets/arrowUp.png";
 import arrowDown from "../assets/arrowDown.png";
 import '../styles/Midbar.css';
 
-const Midbar = () => {
+type searchProp = {
+  search: string;
+}
+
+const Midbar = (props: searchProp) => {
   const [newQuestion, setNewQuestion] = useState('');
   const [newPost, setNewPost] = useState('');
   const [questionData, setQuestionData] = useState<any[]>([]);
@@ -16,7 +21,11 @@ const Midbar = () => {
   const [expandedPosts, setExpandedPosts] = useState<Set<string>>(new Set());
   const [userDisplayName, setUserDisplayName] = useState<string>('');
   const [commentInputs, setCommentInputs] = useState<{ [key: string]: string }>({});
-  const [showCommentInputs, setShowCommentInputs] = useState<{ [key: string]: boolean }>({});
+  const [visibleComments, setVisibleComments] = useState<{ [key: string]: boolean }>({});
+  const [answerInputVisible, setAnswerInputVisible] = useState<{ [key: string]: boolean }>({});
+  const [currentQuestionId, setCurrentQuestionId] = useState<string | null>(null);
+
+  const navigate = useNavigate();
 
   const questionsRef = collection(DataStorage, "questions");
   const postsRef = collection(DataStorage, "posts");
@@ -93,12 +102,42 @@ const Midbar = () => {
           comments: []
         });
         setNewPost('');
-        getPosts(); 
       } catch (error) {
         console.error('Error adding post:', error);
       }
     }
   };
+
+  const handleComment = async (id: string, collection: 'questions' | 'posts') => {
+    if (commentInputs[id]?.trim()) {
+      const postRef = doc(DataStorage, collection, id);
+      const data = collection === 'questions' ? questionData.find(q => q.id === id) : postData.find(p => p.id === id);
+
+      if (data) {
+        const updatedData = { ...data };
+        updatedData.comments = [...(updatedData.comments || []), { user: userDisplayName, text: commentInputs[id], timestamp: new Date() }];
+        await updateDoc(postRef, { comments: updatedData.comments });
+        setCommentInputs(prev => ({ ...prev, [id]: '' }));
+      }
+    }
+  };
+
+  const handleAnswer = async (id: string) => {
+    if (commentInputs[id]?.trim()) {
+      const postRef = doc(DataStorage, "questions", id);
+      const data = questionData.find(q => q.id === id);
+
+      if (data) {
+        const updatedData = { ...data };
+        updatedData.comments = [...(updatedData.comments || []), { user: userDisplayName, text: commentInputs[id], timestamp: new Date() }];
+        await updateDoc(postRef, { comments: updatedData.comments });
+        setCommentInputs(prev => ({ ...prev, [id]: '' }));
+        setAnswerInputVisible(prev => ({ ...prev, [id]: false }));
+        navigate(`/answers/${id}`); // Navigate to the answers section
+      }
+    }
+  };
+
 
   const handleVote = async (id: string, type: 'upvote' | 'downvote', collection: 'questions' | 'posts') => {
     try {
@@ -128,31 +167,12 @@ const Midbar = () => {
     }
   };
 
-  const handleComment = async (id: string, collection: 'questions' | 'posts') => {
-    if (commentInputs[id]?.trim()) {
-      const postRef = doc(DataStorage, collection, id);
-      const data = collection === 'questions' ? questionData.find(q => q.id === id) : postData.find(p => p.id === id);
-
-      if (data) {
-        const updatedData = { ...data };
-        updatedData.comments = [...(updatedData.comments || []), { user: userDisplayName, text: commentInputs[id], timestamp: new Date() }];
-        await updateDoc(postRef, { comments: updatedData.comments });
-        setCommentInputs(prev => ({ ...prev, [id]: '' }));
-      }
-    }
-  };
-  const handleAnswer = async (id: string, collection: 'questions' | 'posts') => {
-    if (commentInputs[id]?.trim()) {
-      const postRef = doc(DataStorage, collection, id);
-      const data = collection === 'questions' ? questionData.find(q => q.id === id) : postData.find(p => p.id === id);
-
-      if (data) {
-        const updatedData = { ...data };
-        updatedData.comments = [...(updatedData.comments || []), { user: userDisplayName, text: commentInputs[id], timestamp: new Date() }];
-        await updateDoc(postRef, { comments: updatedData.comments });
-        setCommentInputs(prev => ({ ...prev, [id]: '' }));
-      }
-    }
+  const toggleAnswerInput = (id: string) => {
+    setAnswerInputVisible(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+    setCurrentQuestionId(id); // Set the current question ID for redirection
   };
 
   const toggleExpandQuestion = (id: string) => {
@@ -179,8 +199,16 @@ const Midbar = () => {
     });
   };
 
-  const toggleCommentInput = (id: string) => {
-    setShowCommentInputs(prev => ({ ...prev, [id]: !prev[id] }));
+  const toggleCommentVisibility = (id: string) => {
+    setVisibleComments(prev => {
+      const newVisibleComments = { ...prev };
+      if (newVisibleComments[id]) {
+        delete newVisibleComments[id];
+      } else {
+        newVisibleComments[id] = true;
+      }
+      return newVisibleComments;
+    });
   };
 
   useEffect(() => {
@@ -218,116 +246,120 @@ const Midbar = () => {
         <div className="midbar-actions">
           <h1><i className="fas fa-question-circle" onClick={handleQuestionClick}></i> Ask</h1>
           <h1><i className="fas fa-pen-square"></i> Answer</h1>
-          <h1 onClick={handlePostClick}><i className="fas fa-pen"></i> Post</h1>
+          <h1><i className="fas fa-pen"  onClick={handleQuestionClick}></i> Post</h1>
+
         </div>
       </div>
 
-      {questionData.map((data: any) => (
-        <div key={data.id} className="midbar">
-          <div className="content">
-            <Avatar round size="35" name={userDisplayName || 'A'} />
-            <span className='userName'>{userDisplayName}</span>
-          </div>
-          <h1 className="captions">
-            {expandedQuestions.has(data.id) ? data.question : truncateText(data.question, 50)}
-            {data.question.split(' ').length > 50 && (
-              <span className="toggle-caption" onClick={() => toggleExpandQuestion(data.id)}>
-                {expandedQuestions.has(data.id) ? " Show less" : " See more"}
-              </span>
-            )}
-          </h1>
-          <hr />
-          <div className="post-actions">
-            <div>
+      <div>
+        
+      </div>
 
-            <h1><i className="fas fa-pen-square post-action-icon"  onClick={() => toggleCommentInput(data.id)} ></i> Answer</h1>
-              <span>{data.comments?.length || 0}</span>
-            </div>
-          </div>
-          {showCommentInputs[data.id] && (
-            <div className="comment-input">
-              <input
-                type="text"
-                value={commentInputs[data.id] || ''}
-                onChange={(e) => setCommentInputs({ ...commentInputs, [data.id]: e.target.value })}
-                placeholder="Write a comment..."
-              />
-              <button onClick={() => handleComment(data.id, 'questions')}>handleAnswer</button>
-            </div>
+      {questionData
+  .filter((data) => data?.question?.toLowerCase().includes(props?.search?.toLowerCase() || ''))
+  .map((data: any) => (
+    <div key={data.id} className="midbar">
+      <div className="content">
+        <Avatar round size="35" name={userDisplayName || 'A'} />
+        <span className='userName'>{userDisplayName}</span>
+      </div>
+      <h1 className="captions">
+        {expandedQuestions.has(data.id) ? data.question : truncateText(data.question, 50)}
+        {data.question.split(' ').length > 50 && (
+          <span className="toggle-caption" onClick={() => toggleExpandQuestion(data.id)}>
+            {expandedQuestions.has(data.id) ? " Show less" : " See more"}
+          </span>
+        )}
+      </h1>
+      <hr />
+      <div className="post-actions">
+        <div>
+          <h1><i className="fas fa-pen-square post-action-icon" onClick={() => toggleAnswerInput(data.id)}></i> Answer</h1>
+          <span>{data.comments?.length || 0}</span>
+        </div>
+      </div>
+      {answerInputVisible[data.id] && (
+        <div className="comment-input">
+          <input
+            type="text"
+            value={commentInputs[data.id] || ''}
+            onChange={(e) => setCommentInputs({ ...commentInputs, [data.id]: e.target.value })}
+            placeholder="Write your Answer..."
+          />
+          <button onClick={() => handleAnswer(data.id)}>Add Answer</button>
+        </div>
+      )}
+    </div>
+  ))}
+{postData
+  .filter((data) => data?.content?.toLowerCase().includes(props?.search?.toLowerCase() || ''))
+  .map((data: any) => (
+    <div key={data.id} className="midbar">
+      <div className="content">
+        <Avatar round size="35" name={userDisplayName || 'A'} />
+        <span className='userName'>{userDisplayName}</span>
+      </div>
+      <h1 className="captions">
+        {expandedPosts.has(data.id) ? data.content : truncateText(data.content, 50)}
+        {data.content.split(' ').length > 50 && (
+          <span className="toggle-caption" onClick={() => toggleExpandPost(data.id)}>
+            {expandedPosts.has(data.id) ? " Show less" : " See more"}
+          </span>
+        )}
+      </h1>
+      {data.fileURL && (
+        <div className="file-content">
+          {data.fileURL.match(/\.(jpeg|jpg|gif|png)$/) ? (
+            <img src={data.fileURL} alt="Uploaded content" style={{ maxWidth: '100%' }} />
+          ) : (
+            <video controls style={{ maxWidth: '100%' }}>
+              <source src={data.fileURL} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           )}
+        </div>
+      )}
+      <hr />
+      <div className="post-actions">
+        <div>
+          <img src={arrowUp} alt="Upvote" className="post-action-icon" onClick={() => handleVote(data.id, 'upvote', 'posts')} />
+          <span>{data.upvotes || 0}</span>
+        </div>
+        <div>
+          <img src={arrowDown} alt="Downvote" className="post-action-icon" onClick={() => handleVote(data.id, 'downvote', 'posts')} />
+          <span>{data.downvotes || 0}</span>
+        </div>
+        <div>
+          <img src={comments} alt="Comments" className="post-action-icon" onClick={() => toggleCommentVisibility(data.id)} />
+          <span>{data.comments?.length || 0}</span>
+        </div>
+      </div>
+      {visibleComments[data.id] && (
+        <>
+          <div className="comment-input">
+            <input
+              type="text"
+              value={commentInputs[data.id] || ''}
+              onChange={(e) => setCommentInputs({ ...commentInputs, [data.id]: e.target.value })}
+              placeholder="Add comment..."
+            />
+            <button onClick={() => handleComment(data.id, 'posts')}>Add Comment</button>
+          </div>
           <div className="comment-section">
             {data.comments?.map((comment: any, index: number) => (
               <div key={index} className="comment">
-                <Avatar round size="35" name={userDisplayName || 'A'} />
-                <span className="comment-user">{comment.user}</span>: {comment.text}
+                <Avatar round size="35" name={comment.user || 'A'} />
+                <div className="comment-content">
+                  <span className="comment-user">{comment.user}</span>
+                  <p>{comment.text}</p>
+                </div>
               </div>
             ))}
           </div>
-        </div>
-      ))}
-
-      {postData.map((data: any) => (
-        <div key={data.id} className="midbar">
-          <div className="content">
-            <Avatar round size="35" name={userDisplayName || 'A'} />
-            <span className='userName'>{userDisplayName}</span>
-          </div>
-          <h1 className="captions">
-            {expandedPosts.has(data.id) ? data.content : truncateText(data.content, 50)}
-            {data.content.split(' ').length > 50 && (
-              <span className="toggle-caption" onClick={() => toggleExpandPost(data.id)}>
-                {expandedPosts.has(data.id) ? " Show less" : " See more"}
-              </span>
-            )}
-          </h1>
-          {data.fileURL && (
-            <div className="file-content">
-              {data.fileURL.match(/\.(jpeg|jpg|gif|png)$/) ? (
-                <img src={data.fileURL} alt="Uploaded content" style={{ maxWidth: '100%' }} />
-              ) : (
-                <video controls style={{ maxWidth: '100%' }}>
-                  <source src={data.fileURL} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
-              )}
-            </div>
-          )}
-          <hr />
-          <div className="post-actions">
-            <div>
-              <img src={arrowUp} alt="Upvote" className="post-action-icon" onClick={() => handleVote(data.id, 'upvote', 'posts')} />
-              <span>{data.upvotes || 0}</span>
-            </div>
-            <div>
-              <img src={arrowDown} alt="Downvote" className="post-action-icon" onClick={() => handleVote(data.id, 'downvote', 'posts')} />
-              <span>{data.downvotes || 0}</span>
-            </div>
-            <div>
-              <img src={comments} alt="Comments" className="post-action-icon" onClick={() => toggleCommentInput(data.id)} />
-              <span>{data.comments?.length || 0}</span>
-            </div>
-          </div>
-          {showCommentInputs[data.id] && (
-            <div className="comment-input">
-              <input
-                type="text"
-                value={commentInputs[data.id] || ''}
-                onChange={(e) => setCommentInputs({ ...commentInputs, [data.id]: e.target.value })}
-                placeholder="Add comment..."
-              />
-              <button onClick={() => handleComment(data.id, 'posts')}>Add Comment</button>
-            </div>
-          )}
-          <div className="comment-section">
-            {data.comments?.map((comment: any, index: number) => (
-              <div key={index} className="comment">
-                <Avatar round size="35" name={userDisplayName || 'A'} />
-                <span className="comment-user">{comment.user}</span>: {comment.text}
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
+        </>
+      )}
+    </div>
+  ))}
     </div>
   );
 };

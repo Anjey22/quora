@@ -84,4 +84,3 @@ const AnswerSection = () => {
 };
 
 export default AnswerSection;
-

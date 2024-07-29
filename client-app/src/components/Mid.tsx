@@ -6,6 +6,7 @@ import { collection, addDoc, serverTimestamp, updateDoc, doc, onSnapshot, getDoc
 import comments from "../assets/comments.png";
 import arrowUp from "../assets/arrowUp.png";
 import arrowDown from "../assets/arrowDown.png";
+import AI from "../assets/ai.png"
 import '../styles/Midbar.css';
 
 type searchProp = {
@@ -247,115 +248,127 @@ const Midbar = (props: searchProp) => {
           <h1><i className="fas fa-question-circle" onClick={handleQuestionClick}></i> Ask</h1>
           <h1><i className="fas fa-pen-square"></i> Answer</h1>
           <h1><i className="fas fa-pen"  onClick={handleQuestionClick}></i> Post</h1>
-
         </div>
       </div>
 
+
+      <div className="midbar">
+        <div className="content">
+        <Avatar round size="35" name={userDisplayName || 'A'} />
+        <span className='userName'>{userDisplayName}</span>
+      </div>
+        <h1 className='fixCaptions'>Captions</h1>
+       <img src={AI}alt="" />
+        </div>
+
+
+
+
       {questionData
-        .filter((data) => data?.question.toLowerCase().includes(props?.search.toLowerCase()))
-        .map((data: any) => (
-          <div key={data.id} className="midbar">
-            <div className="content">
-              <Avatar round size="35" name={userDisplayName || 'A'} />
-              <span className='userName'>{userDisplayName}</span>
-            </div>
-            <h1 className="captions">
-              {expandedQuestions.has(data.id) ? data.question : truncateText(data.question, 50)}
-              {data.question.split(' ').length > 50 && (
-                <span className="toggle-caption" onClick={() => toggleExpandQuestion(data.id)}>
-                  {expandedQuestions.has(data.id) ? " Show less" : " See more"}
-                </span>
-              )}
-            </h1>
-            <hr />
-            <div className="post-actions">
-              <div>
-                <h1><i className="fas fa-pen-square post-action-icon" onClick={() => toggleAnswerInput(data.id)}></i> Answer</h1>
-                <span>{data.comments?.length || 0}</span>
-              </div>
-            </div>
-            {answerInputVisible[data.id] && (
-              <div className="comment-input">
-                <input
-                  type="text"
-                  value={commentInputs[data.id] || ''}
-                  onChange={(e) => setCommentInputs({ ...commentInputs, [data.id]: e.target.value })}
-                  placeholder="Write your Answer..."
-                />
-                <button onClick={() => handleAnswer(data.id)}>Add Answer</button>
-              </div>
-            )}
+  .filter((data) => data?.question?.toLowerCase().includes(props?.search?.toLowerCase() || ''))
+  .map((data: any) => (
+    <div key={data.id} className="midbar">
+      <div className="content">
+        <Avatar round size="35" name={userDisplayName || 'A'} />
+        <span className='userName'>{userDisplayName}</span>
+      </div>
+      <h1 className="captions">
+        {expandedQuestions.has(data.id) ? data.question : truncateText(data.question, 50)}
+        {data.question.split(' ').length > 50 && (
+          <span className="toggle-caption" onClick={() => toggleExpandQuestion(data.id)}>
+            {expandedQuestions.has(data.id) ? " Show less" : " See more"}
+          </span>
+        )}
+      </h1>
+      <hr />
+      <div className="post-actions">
+        <div>
+          <h1><i className="fas fa-pen-square post-action-icon" onClick={() => toggleAnswerInput(data.id)}></i> Answer</h1>
+          <span>{data.comments?.length || 0}</span>
+        </div>
+      </div>
+      {answerInputVisible[data.id] && (
+        <div className="comment-input">
+          <input
+            type="text"
+            value={commentInputs[data.id] || ''}
+            onChange={(e) => setCommentInputs({ ...commentInputs, [data.id]: e.target.value })}
+            placeholder="Write your Answer..."
+          />
+          <button onClick={() => handleAnswer(data.id)}>Add Answer</button>
+        </div>
+      )}
+    </div>
+  ))}
+{postData
+  .filter((data) => data?.content?.toLowerCase().includes(props?.search?.toLowerCase() || ''))
+  .map((data: any) => (
+    <div key={data.id} className="midbar">
+      <div className="content">
+        <Avatar round size="35" name={userDisplayName || 'A'} />
+        <span className='userName'>{userDisplayName}</span>
+      </div>
+      <h1 className="captions">
+        {expandedPosts.has(data.id) ? data.content : truncateText(data.content, 50)}
+        {data.content.split(' ').length > 50 && (
+          <span className="toggle-caption" onClick={() => toggleExpandPost(data.id)}>
+            {expandedPosts.has(data.id) ? " Show less" : " See more"}
+          </span>
+        )}
+      </h1>
+      {data.fileURL && (
+        <div className="file-content">
+          {data.fileURL.match(/\.(jpeg|jpg|gif|png)$/) ? (
+            <img src={data.fileURL} alt="Uploaded content" style={{ maxWidth: '100%' }} />
+          ) : (
+            <video controls style={{ maxWidth: '100%' }}>
+              <source src={data.fileURL} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          )}
+        </div>
+      )}
+      <hr />
+      <div className="post-actions">
+        <div>
+          <img src={arrowUp} alt="Upvote" className="post-action-icon" onClick={() => handleVote(data.id, 'upvote', 'posts')} />
+          <span>{data.upvotes || 0}</span>
+        </div>
+        <div>
+          <img src={arrowDown} alt="Downvote" className="post-action-icon" onClick={() => handleVote(data.id, 'downvote', 'posts')} />
+          <span>{data.downvotes || 0}</span>
+        </div>
+        <div>
+          <img src={comments} alt="Comments" className="post-action-icon" onClick={() => toggleCommentVisibility(data.id)} />
+          <span>{data.comments?.length || 0}</span>
+        </div>
+      </div>
+      {visibleComments[data.id] && (
+        <>
+          <div className="comment-input">
+            <input
+              type="text"
+              value={commentInputs[data.id] || ''}
+              onChange={(e) => setCommentInputs({ ...commentInputs, [data.id]: e.target.value })}
+              placeholder="Add comment..."
+            />
+            <button onClick={() => handleComment(data.id, 'posts')}>Add Comment</button>
           </div>
-        ))}
-      {postData
-        .filter((data) => data?.content.toLowerCase().includes(props?.search.toLowerCase()))
-        .map((data: any) => (
-          <div key={data.id} className="midbar">
-            <div className="content">
-              <Avatar round size="35" name={userDisplayName || 'A'} />
-              <span className='userName'>{userDisplayName}</span>
-            </div>
-            <h1 className="captions">
-              {expandedPosts.has(data.id) ? data.content : truncateText(data.content, 50)}
-              {data.content.split(' ').length > 50 && (
-                <span className="toggle-caption" onClick={() => toggleExpandPost(data.id)}>
-                  {expandedPosts.has(data.id) ? " Show less" : " See more"}
-                </span>
-              )}
-            </h1>
-            {data.fileURL && (
-              <div className="file-content">
-                {data.fileURL.match(/\.(jpeg|jpg|gif|png)$/) ? (
-                  <img src={data.fileURL} alt="Uploaded content" style={{ maxWidth: '100%' }} />
-                ) : (
-                  <video controls style={{ maxWidth: '100%' }}>
-                    <source src={data.fileURL} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                )}
-              </div>
-            )}
-            <hr />
-            <div className="post-actions">
-              <div>
-                <img src={arrowUp} alt="Upvote" className="post-action-icon" onClick={() => handleVote(data.id, 'upvote', 'posts')} />
-                <span>{data.upvotes || 0}</span>
-              </div>
-              <div>
-                <img src={arrowDown} alt="Downvote" className="post-action-icon" onClick={() => handleVote(data.id, 'downvote', 'posts')} />
-                <span>{data.downvotes || 0}</span>
-              </div>
-              <div>
-                <img src={comments} alt="Comments" className="post-action-icon" onClick={() => toggleCommentVisibility(data.id)} />
-                <span>{data.comments?.length || 0}</span>
-              </div>
-            </div>
-            {visibleComments[data.id] && (
-              <>
-                <div className="comment-input">
-                  <input
-                    type="text"
-                    value={commentInputs[data.id] || ''}
-                    onChange={(e) => setCommentInputs({ ...commentInputs, [data.id]: e.target.value })}
-                    placeholder="Add comment..."
-                  />
-                  <button onClick={() => handleComment(data.id, 'posts')}>Add Comment</button>
+          <div className="comment-section">
+            {data.comments?.map((comment: any, index: number) => (
+              <div key={index} className="comment">
+                <Avatar round size="35" name={comment.user || 'A'} />
+                <div className="comment-content">
+                  <span className="comment-user">{comment.user}</span>
+                  <p>{comment.text}</p>
                 </div>
-                <div className="comment-section">
-                  {data.comments?.map((comment: any, index: number) => (
-                    <div key={index} className="comment">
-                      <Avatar round size="35" name={comment.user || 'A'} />
-                      <div className="comment-content">
-                        <span className="comment-user">{comment.user}</span>
-                        <p>{comment.text}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </>
-            )}
+              </div>
+            ))}
           </div>
-        ))}
+        </>
+      )}
+    </div>
+  ))}
     </div>
   );
 };

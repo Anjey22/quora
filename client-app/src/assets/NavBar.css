@@ -2,15 +2,15 @@
   display: flex;
   align-items: center;
   padding: 1rem;
-  padding-left: 2rem; /* Add padding to the left */
-  padding-right: 2rem; /* Add padding to the right */
+  padding-left: 2rem;
+  padding-right: 2rem;
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  position: fixed; /* Make the navbar fixed */
-  top: 0; /* Align it to the top */
-  left: 0; /* Align it to the left */
-  right: 0; /* Align it to the right */
-  z-index: 1000; /* Ensure it is above other elements */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 }
 
 .navbar-left,
@@ -33,7 +33,6 @@
 }
 
 .images:hover {
-  /* Remove hover effect */
   background-color: #eeeeee;
   color: inherit;
   padding: 5px;
@@ -97,4 +96,36 @@
 
 .navbar-right .menu-button:hover {
   background-color: #cbd5e0;
+}
+
+.avatar-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.dropdownProfile {
+  position: absolute;
+  top: 40px; /* Adjust this value based on your layout */
+  right: 0;
+  background-color: white;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1010; /* Ensure it is above other elements */
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.dropdownProfile ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dropdownProfile li {
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.dropdownProfile li:hover {
+  background-color: #f1f1f1;
 }

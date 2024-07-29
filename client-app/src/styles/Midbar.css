@@ -143,11 +143,11 @@
 /* Midbar Style */
 .midbar {
   padding: 15px 20px;
-  width: 650px;
+  width: 600px;
   background-color: white;
   border-radius: 3px;
   border: 1px solid lightgray;
-  margin: 20px auto; 
+  margin: 20px 550px; 
 }
 
 .midbar-top {
@@ -167,7 +167,7 @@
   border: 1px solid #ccc;
   border-radius: 25px; /* Rounded corners */
   background-color: #f9f9f9;
-  width: 550px;
+  width: 500px;
   font-size: 14px; /* Adjusted font size for readability */
 }
 

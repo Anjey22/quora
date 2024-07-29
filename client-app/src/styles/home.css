@@ -1,10 +1,15 @@
 .home {
-    height: 100vh; /* Equivalent to h-screen */
-    width: 100vw;  /* Equivalent to w-screen */
-    background-color: #f9f9f9;/* Equivalent to bg-gray-100 */
-    display: grid; /* Equivalent to grid */
-    grid-template-columns: repeat(6, 1fr); /* Equivalent to grid-cols-6 */
+  min-height: 100vh; /* Ensure the home covers the full height */
+  width: 100vw; /* Full width */
+  background-color: #f9f9f9; /* Background color */
+  background-size: cover; /* Ensure background covers the area */
+  display: grid; /* Use grid layout */
+  grid-template-columns: repeat(6, 1fr); /* Define 6 columns */
+  margin-top: 80px;
+  overflow: hidden; /* Prevent scrollbars from appearing */
+  position: relative; /* Ensure children can position absolutely relative to .home */
 }
+
 
 
 /* Leftbar style */
@@ -13,11 +18,14 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    position: fixed;
+    top: 2000;
     padding: 10px 20px;
-    padding-left:220px;
+    padding-left:270px;
     background-color: #f9f9f9;
-    border-right: 1px solid #ddd;
+
     height: 100vh;
+    z-index: 1000; /* Ensure it stays on top */
     
 }
 
@@ -75,6 +83,8 @@
 .leftbar-footer a:hover {
     color: #000;
 }
+
+
 
 
 
