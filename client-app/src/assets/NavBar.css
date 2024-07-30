@@ -129,3 +129,39 @@
 .dropdownProfile li:hover {
   background-color: #f1f1f1;
 }
+
+
+ /*Post PopUp Avatar */
+
+ .avatar-container {
+  display: flex; /* Use flexbox to align items horizontally */
+  align-items: center; /* Center items vertically */
+}
+.credential
+{
+display:flex;
+border:2px lightgray solid;
+align-items: center;
+width:110px;
+padding:5px 10px;
+border-radius:7px;
+margin:10px 40px 0px;
+position:relative;
+bottom:45px;
+}
+.credentials
+{
+display:flex;
+border:3px lightgray solid;
+align-items: center;
+width:160px;
+padding:5px 10px;
+border-radius:7px;
+margin:10px 5px;
+
+}
+
+.public{
+  height:20px;
+  width:22px;
+}
