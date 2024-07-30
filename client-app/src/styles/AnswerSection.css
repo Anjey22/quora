@@ -1,6 +1,22 @@
 /* AnswerSection.css */
+.QA{
+    border:1px solid #ccc;
+    border-radius:6px;
+    padding:10px;
+    margin-top:80px;
+    margin-bottom:15px;
+    display:flex;
+}
+
+.star{
+    height:20px;
+    width:20px;
+    margin-right:10px;
+}
 .answer-section {
+    width:600px;
     padding: 20px;
+    margin:Auto;
   }
   
   .answer-item {

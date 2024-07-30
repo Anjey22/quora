@@ -6,6 +6,8 @@ import { collection, addDoc, serverTimestamp, updateDoc, doc, onSnapshot, getDoc
 import comments from "../assets/comments.png";
 import arrowUp from "../assets/arrowUp.png";
 import arrowDown from "../assets/arrowDown.png";
+import AI from "../assets/ai.png"
+import repost from "../assets/repost.png"
 import '../styles/Midbar.css';
 
 type searchProp = {
@@ -24,6 +26,13 @@ const Midbar = (props: searchProp) => {
   const [visibleComments, setVisibleComments] = useState<{ [key: string]: boolean }>({});
   const [answerInputVisible, setAnswerInputVisible] = useState<{ [key: string]: boolean }>({});
   const [currentQuestionId, setCurrentQuestionId] = useState<string | null>(null);
+
+  const [upvotes, setUpvotes] = useState<number>(0);
+  const [downvotes, setDownvotes] = useState<number>(0);
+  const [fixcommentInputs, setCommentfixInputs] = useState<string>('');
+  const [fixcommentsData, setCommentsfixData] = useState<any[]>([]);
+  const [fixvisibleComments, setVisiblefixComments] = useState<boolean>(false);
+  const [repo, setRepost] = useState<number>(0);
 
   const navigate = useNavigate();
 
@@ -211,6 +220,66 @@ const Midbar = (props: searchProp) => {
     });
   };
 
+
+
+
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (user) {
+        setUserDisplayName(user.displayName || '');
+      } else {
+        setUserDisplayName('');
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const fixVote = async (type: 'upvote' | 'downvote') => {
+    if (type === 'upvote') {
+      setUpvotes(upvotes + 1);
+    } else {
+      setDownvotes(downvotes + 1);
+    }
+
+    // Update the Firestore document for votes if needed
+    // const postRef = doc(DataStorage, 'posts', postId);
+    // await updateDoc(postRef, {
+    //   upvotes: type === 'upvote' ? upvotes + 1 : upvotes,
+    //   downvotes: type === 'downvote' ? downvotes + 1 : downvotes,
+    // });
+  };
+
+  const fixComment = async () => {
+    if (fixcommentInputs.trim()) {
+      const newComment = {
+        user: userDisplayName,
+        text: fixcommentInputs,
+        timestamp: new Date(),
+      };
+      setCommentsfixData([...fixcommentsData, newComment]);
+      setCommentfixInputs('');
+
+      // Update the Firestore document for comments if needed
+      // const postRef = doc(DataStorage, 'posts', postId);
+      // await updateDoc(postRef, {
+      //   comments: [...commentsData, newComment],
+      // });
+    }
+  };
+
+  const fixCommentVisibility = () => {
+    setVisiblefixComments(!fixvisibleComments);
+  };
+
+
+
+
+
+
+
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
@@ -247,13 +316,64 @@ const Midbar = (props: searchProp) => {
           <h1><i className="fas fa-question-circle" onClick={handleQuestionClick}></i> Ask</h1>
           <h1><i className="fas fa-pen-square"></i> Answer</h1>
           <h1><i className="fas fa-pen"  onClick={handleQuestionClick}></i> Post</h1>
-
         </div>
       </div>
 
-      <div>
+
+      <div className="midbar">
+      <div className="content">
+        <Avatar round size="35" name={userDisplayName || 'A'} />
+        <span className='userName'>{userDisplayName}</span>
+      </div>
+      <h1 className='fix-Caption'>Artificial Intelligence (AI) refers to the development of computer systems that can perform tasks that typically require human intelligence, such as learning, problem-solving, and decision-making. AI enables machines to analyze data, recognize patterns, and make predictions or recommendations. </h1>
+      <img src={AI} className='Ai' alt="Post image" />
+      <div className="post-actions">
+        <div>
+          <img src={arrowUp} alt="Upvote" className="post-action-icon" onClick={() => fixVote('upvote')} />
+          <span>{upvotes}</span>
+        </div>
+        <div>
+          <img src={arrowDown} alt="Downvote" className="post-action-icon" onClick={() => fixVote('downvote')} />
+          <span>{downvotes}</span>
+        </div>
+        <div>
+          <img src={comments} alt="Comments" className="post-action-icon" onClick={fixCommentVisibility} />
+          <span>{fixcommentsData.length}</span>
+        </div>
+
+        <div>
+      <img src={repost} alt="Repost" className="post-action-icon" />
+      <span>{repo || 0}</span>
+    </div>
         
       </div>
+      {fixvisibleComments && (
+        <>
+          <div className="comment-input">
+            <input
+              type="text"
+              value={fixcommentInputs}
+              onChange={(e) => setCommentfixInputs(e.target.value)}
+              placeholder="Add comment..."
+            />
+            <button onClick={fixComment}>Add Comment</button>
+          </div>
+          <div className="comment-section">
+            {fixcommentsData.map((comment, index) => (
+              <div key={index} className="comment">
+                <Avatar round size="35" name={comment.user || 'A'} />
+                <div className="comment-content">
+                  <span className="comment-user">{comment.user}</span>
+                  <p>{comment.text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+
+
 
       {questionData
   .filter((data) => data?.question?.toLowerCase().includes(props?.search?.toLowerCase() || ''))
@@ -271,7 +391,6 @@ const Midbar = (props: searchProp) => {
           </span>
         )}
       </h1>
-      <hr />
       <div className="post-actions">
         <div>
           <h1><i className="fas fa-pen-square post-action-icon" onClick={() => toggleAnswerInput(data.id)}></i> Answer</h1>
@@ -319,20 +438,30 @@ const Midbar = (props: searchProp) => {
           )}
         </div>
       )}
-      <hr />
+     
       <div className="post-actions">
-        <div>
-          <img src={arrowUp} alt="Upvote" className="post-action-icon" onClick={() => handleVote(data.id, 'upvote', 'posts')} />
-          <span>{data.upvotes || 0}</span>
-        </div>
-        <div>
-          <img src={arrowDown} alt="Downvote" className="post-action-icon" onClick={() => handleVote(data.id, 'downvote', 'posts')} />
-          <span>{data.downvotes || 0}</span>
-        </div>
-        <div>
-          <img src={comments} alt="Comments" className="post-action-icon" onClick={() => toggleCommentVisibility(data.id)} />
-          <span>{data.comments?.length || 0}</span>
-        </div>
+    <div className="vote-container">
+      <div>
+        <img src={arrowUp} alt="Upvote" className="post-action-icon" onClick={() => handleVote(data.id, 'upvote', 'posts')} />
+        <h1>Upvote</h1>
+        <span>{data.upvotes || 0}</span>
+      </div>
+      <hr />
+      <div>
+        <img src={arrowDown} alt="Downvote" className="post-action-icon" onClick={() => handleVote(data.id, 'downvote', 'posts')} />
+        <span>{data.downvotes || 0}</span>
+      </div>
+    </div>
+
+    <div>
+      <img src={comments} alt="Comments" className="post-action-icon" onClick={() => toggleCommentVisibility(data.id)} />
+      <span>{data.comments?.length || 0}</span>
+    </div>
+
+    <div>
+      <img src={repost} alt="Repost" className="post-action-icon" />
+      <span>{data.reposts || 0}</span>
+    </div>
       </div>
       {visibleComments[data.id] && (
         <>
@@ -349,8 +478,9 @@ const Midbar = (props: searchProp) => {
             {data.comments?.map((comment: any, index: number) => (
               <div key={index} className="comment">
                 <Avatar round size="35" name={comment.user || 'A'} />
+                <span className="comment-user">{comment.user}</span>
                 <div className="comment-content">
-                  <span className="comment-user">{comment.user}</span>
+                 
                   <p>{comment.text}</p>
                 </div>
               </div>

@@ -3,6 +3,7 @@ import { DataStorage } from "../firebase/setup";
 import Avatar from "react-avatar";
 import { collection, updateDoc, doc, onSnapshot } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import star from '../assets/star.jpg'
 import '../styles/AnswerSection.css';
 
 const AnswerSection = () => {
@@ -53,6 +54,10 @@ const AnswerSection = () => {
 
   return (
     <div className="answer-section">
+      <div className='QA'>
+       <img src={star} alt="star" className='star'/> <h1>Questions for you</h1>
+      </div>
+
       {questionData.map((data: any) => (
         <div key={data.id} className="answer-item">
           <div className="question-header">

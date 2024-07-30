@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
+import { useNavigate } from 'react-router-dom';
 import '../assets/NavBar.css';
 import { auth } from "../firebase/setup";
 import quora from "../assets/quora.png";
@@ -12,10 +12,10 @@ import search from "../assets/search.png";
 import globe from "../assets/globe.png";
 import Avatar from 'react-avatar';
 import PostpopUp from './PostpopUp';
-import DropdownProfile from './DropdownProfile'; // Import the DropdownProfile component
+import DropdownProfile from './DropdownProfile';
 
 type NavbarProps = {
-  setSearch: (value: string) => void
+  setSearch: (value: string) => void;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ setSearch }) => {
@@ -23,7 +23,7 @@ const Navbar: React.FC<NavbarProps> = ({ setSearch }) => {
   const [userDisplayName, setUserDisplayName] = useState<string>('A');
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
-  const navigate = useNavigate(); // Initialize useNavigate hook
+  const navigate = useNavigate();
 
   const handleClose = () => setPost(false);
 
@@ -52,11 +52,15 @@ const Navbar: React.FC<NavbarProps> = ({ setSearch }) => {
     });
   };
 
+  const handleNavigation = (path: string) => {
+    navigate(path);
+  };
+
   return (
     <div className="navbar">
       <div className="navbar-left">
-        <img src={quora} alt="Quora" />
-        <img src={home} alt="Home" className='images' />
+        <img src={quora} alt="Quora" onClick={() => handleNavigation('/mainpage')} />
+        <img src={home} alt="Home" className='images' onClick={() => handleNavigation('/mainpage')} />
         <img src={clipboard} alt="Clipboard" className='images' />
         <img src={edit} alt="Edit" className='images' />
         <img src={group} alt="Group" className='images' />
