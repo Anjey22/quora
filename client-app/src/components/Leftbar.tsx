@@ -5,11 +5,9 @@ import mobile from '../assets/mobile.png';
 import science from '../assets/science.png';
 import technology from '../assets/technology.png';
 
-type MenuProp = {
-    setMenu:any
-}
 
-const Leftbar = (props:MenuProp) => {
+
+const Leftbar = () => {
   return (
     <div className="leftbar">
         <div className="leftbar-item"> 

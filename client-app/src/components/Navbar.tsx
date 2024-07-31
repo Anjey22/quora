@@ -86,7 +86,6 @@ const Navbar: React.FC<NavbarProps> = ({ setSearch }) => {
         </div>
         <img src={globe} alt="globe" className='globe images' />
         <button onClick={() => setPost(true)} className="add-question">Add question</button>
-        <button className="menu-button">=</button>
       </div>
       <PostpopUp show={post} onClose={handleClose} />
     </div>

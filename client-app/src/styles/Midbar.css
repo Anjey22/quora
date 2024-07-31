@@ -7,7 +7,7 @@
   background-color: white;
   border-radius: 3px;
   border: 1px solid lightgray;
-  margin: 20px 550px; 
+  margin: 20px 0px 20px 490px; 
 }
 
 .midbar-top {
@@ -73,18 +73,6 @@
 .fix-Caption{
   margin-top:10px;
 }
-
-/*.post-actions {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 8px;
-}
-
-.post-action-icon {
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-}*/
 
 .post-actions {
   display: flex;
@@ -208,3 +196,5 @@
       margin-bottom: 5px;
   }
 }
+
+

@@ -1,21 +1,27 @@
-import { useState } from "react";
+
 import Leftbar from "./Leftbar";
 import Mid from "./Mid";
+import Rightbar from "./Rightbar";
 
 type SearchProp = {
   search: string;
 };
 
 const Home = ({ search }: SearchProp) => {
-  const [menu, setMenu] = useState("");
+
 
   return (
     <div className="home">
       <div>
-        <Leftbar setMenu={setMenu} />
+        <Leftbar/>
       </div>
+      
       <div>
         <Mid search={search} />
+      </div>
+  
+      <div>
+      <Rightbar/>
       </div>
     </div>
   );

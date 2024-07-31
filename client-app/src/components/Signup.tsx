@@ -17,8 +17,12 @@ const Signup = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        toast.success("Login successful!");
+        console.log("User detected in onAuthStateChanged:", user);
+        // Redirect user after successful login and clear input fields
         navigate("/mainpage");
+        // Ensure input fields are cleared on page reload
+        setLoginEmail('');
+        setLoginPassword('');
       }
     });
     return () => unsubscribe();
@@ -26,25 +30,33 @@ const Signup = () => {
 
   const googleSignup = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);
+      console.log("Google signup result:", result);
       toast.success("Login successful!");
       navigate("/mainpage");
+      // Clear input fields after successful login
+      setLoginEmail('');
+      setLoginPassword('');
     } catch (error) {
+      console.error("Google signup error:", error);
       toast.error("Login failed. Please try again.");
-      console.error(error);
     }
   };
 
   const facebookSignup = async () => {
     try {
       const result = await signInWithPopup(auth, facebookProvider);
+      console.log("Facebook signup result:", result);
       if (result.user) {
         toast.success("Login successful!");
         navigate("/mainpage");
+        // Clear input fields after successful login
+        setLoginEmail('');
+        setLoginPassword('');
       }
     } catch (error) {
+      console.error("Facebook signup error:", error);
       toast.error("Login failed. Please try again.");
-      console.error(error);
     }
   };
 
@@ -54,20 +66,35 @@ const Signup = () => {
       await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
       toast.success("Login successful!");
       navigate("/mainpage");
+      // Clear input fields after successful login
+      setLoginEmail('');
+      setLoginPassword('');
     } catch (error: any) {
       const errorCode = error.code;
       if (errorCode === 'auth/user-not-found') {
         toast.error("No account found with this email. Please sign up first.");
       } else if (errorCode === 'auth/wrong-password') {
-        toast.error("Invalid credentials. Please try again.");
+        toast.error("Invalid credentials. Please try again or Sign Up first.");
+      } else {
+        toast.error("Login failed. Please try again.");
       }
-      console.error(error);
+      console.error("Login error:", error);
     }
   };
 
   return (
     <div className="landing">
-      <ToastContainer />
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <div className="container">
         <div className="header">
           <h1 className="title">Quora</h1>

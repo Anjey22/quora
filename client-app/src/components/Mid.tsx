@@ -243,12 +243,7 @@ const Midbar = (props: searchProp) => {
       setDownvotes(downvotes + 1);
     }
 
-    // Update the Firestore document for votes if needed
-    // const postRef = doc(DataStorage, 'posts', postId);
-    // await updateDoc(postRef, {
-    //   upvotes: type === 'upvote' ? upvotes + 1 : upvotes,
-    //   downvotes: type === 'downvote' ? downvotes + 1 : downvotes,
-    // });
+    
   };
 
   const fixComment = async () => {
@@ -260,24 +255,12 @@ const Midbar = (props: searchProp) => {
       };
       setCommentsfixData([...fixcommentsData, newComment]);
       setCommentfixInputs('');
-
-      // Update the Firestore document for comments if needed
-      // const postRef = doc(DataStorage, 'posts', postId);
-      // await updateDoc(postRef, {
-      //   comments: [...commentsData, newComment],
-      // });
     }
   };
 
   const fixCommentVisibility = () => {
     setVisiblefixComments(!fixvisibleComments);
   };
-
-
-
-
-
-
 
 
   useEffect(() => {
@@ -315,7 +298,7 @@ const Midbar = (props: searchProp) => {
         <div className="midbar-actions">
           <h1><i className="fas fa-question-circle" onClick={handleQuestionClick}></i> Ask</h1>
           <h1><i className="fas fa-pen-square"></i> Answer</h1>
-          <h1><i className="fas fa-pen"  onClick={handleQuestionClick}></i> Post</h1>
+          <h1><i className="fas fa-pen" onClick={handleQuestionClick}></i> Post</h1>
         </div>
       </div>
 
@@ -385,7 +368,7 @@ const Midbar = (props: searchProp) => {
         <Avatar round size="35" name={userDisplayName || 'A'} />
         <span className='userName'>{userDisplayName}</span>
       </div>
-      <h1 className='fix-Caption'> Is AI really Artificial Intelligence or Automated Invader? </h1>
+      <h1 className='fix-Caption'><b> Is AI really Artificial Intelligence or Automated Invader? </b></h1>
       <br></br>
       <iframe 
     src="https://www.youtube.com/embed/veoqD-nAeIg?autoplay=1&mute=1" 
@@ -467,7 +450,7 @@ const Midbar = (props: searchProp) => {
       </h1></strong>
       <div className="post-actions">
         <div>
-          <h1><i className="fas fa-pen-square post-action-icon" onClick={() => toggleAnswerInput(data.id)}></i> Answer</h1>
+          <h1 onClick={() => toggleAnswerInput(data.id)}><i className="fas fa-pen-square post-action-icon"></i> Answer</h1>
           <span>{data.comments?.length || 0}</span>
         </div>
       </div>
@@ -515,8 +498,8 @@ const Midbar = (props: searchProp) => {
      
       <div className="post-actions">
     <div className="vote-container">
-      <div>
-        <img src={arrowUp} alt="Upvote" className="post-action-icon" onClick={() => handleVote(data.id, 'upvote', 'posts')} />
+      <div className="post-action-icon" onClick={() => handleVote(data.id, 'upvote', 'posts')}>
+        <img src={arrowUp} alt="Upvote" />
         <h1>Upvote</h1>
         <span>{data.upvotes || 0}</span>
       </div>

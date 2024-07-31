@@ -1,13 +1,13 @@
 .home {
-  min-height: 100vh; /* Ensure the home covers the full height */
-  width: 100vw; /* Full width */
-  background-color: #f9f9f9; /* Background color */
-  background-size: cover; /* Ensure background covers the area */
-  display: grid; /* Use grid layout */
-  grid-template-columns: repeat(6, 1fr); /* Define 6 columns */
+  min-height: 100vh;
+  width: 100vw;
+  background-color: #f9f9f9;
+  background-size: cover;
+  display: grid;
+  grid-template-columns: 0% 70% 30% ; /* Adjust according to your layout */
   margin-top: 80px;
-  overflow: hidden; /* Prevent scrollbars from appearing */
-  position: relative; /* Ensure children can position absolutely relative to .home */
+  overflow: hidden;
+  position: relative;
 }
 
 
@@ -20,13 +20,11 @@
     align-items: flex-start;
     position: fixed;
     top: 2000;
-    padding: 10px 20px;
-    padding-left:250px;
+    padding: 10px 15px;
+    padding-left:230px;
     background-color: #f9f9f9;
-
     height: 100vh;
-    z-index: 1000; /* Ensure it stays on top */
-    
+
 }
 
 .leftbar-item {
@@ -86,114 +84,35 @@
 
 
 
-
-
-/*midbar style 
-.midbar {
-    padding: 15px 20px;
-    width: 650px;
-    background-color: white;
-    border-radius: 3px;
-    border:1px solid lightgray;
-    margin: 20px;
-  }
-  
-  .midbar-top {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    
-  }
-  
-  .midbar-avatar-input {
-    display: flex;
-    align-items: center;
-  }
-  
-  .midbar-avatar-input input {
-    margin-left: 10px;
-    padding: 10px 25px;
-    border: 1px solid #ccc;
-    border-radius: 50px;
-    background-color:#f9f9f9;
-    width: 550px;
-  }
-
-  
-  .midbar-actions {
-    display: flex;
-    justify-content: space-around;
-  }
-  
-  .midbar-actions h1 {
-    font-size: 16px;
-    font-weight: normal;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-  }
-  
-  .midbar-actions h1 i {
-    margin-right: 5px;
-  }
-  .fas{
-    font-size: 20px;
-  }
-  
-  .toggle-caption {
-    color: blue;
-    cursor: pointer;
-    text-decoration: underline;
-  }
-
-
-.midbar-actions {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 8px;
-  }
-  
-  .midbar-actions h1 {
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  .content {
-    display: flex;
-    align-items: center;
-  }
-  
-  .userName {
-    margin-left: 8px;
-    font-weight: bold;
-  }
-  
-  .captions {
-    margin-top: 8px;
-    font-size: 18px;
-  }
-  
-  .toggle-caption {
-    color: #0073b1;
-    cursor: pointer;
-  }
-  
-  .file-content {
-    margin-top: 8px;
-  }
-  
-  .post-actions {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 8px;
-  }
-  
-  .post-action-icon {
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-  } */
-  
+/* Rightbar style */
+.rightbar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0.1, 0.1, 0, 0.3);
+  max-width: 250px;
+  margin-top: 50px;
+  margin-left: 50px;
+  height: 540px;
+}
 
 
 
+.ad-image {
+  width: 100%;
+  height: 250px;
+  border-radius: 8px;
+}
+.midad{
+  border-bottom:solid lightgray 1px
+}
+
+.ad-label {
+  font-size: 14px;
+  color: #555;
+  text-align: center;
+  margin-top: 10px;
+}
